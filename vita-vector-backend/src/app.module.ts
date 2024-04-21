@@ -4,6 +4,9 @@ import { UserModule } from './user/user.module';
 import { ConfigModule } from '@nestjs/config';
 
 @Module({
-  imports: [ConfigModule.forRoot(), AuthModule, UserModule],
+  imports: [ConfigModule.forRoot({
+    envFilePath: process.env.NODE_ENV === 'production' ? '.env' : '.env.local',
+    isGlobal: true,
+  }), AuthModule, UserModule],
 })
 export class AppModule {}
