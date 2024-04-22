@@ -20,8 +20,8 @@ export class AuthController {
   @UsePipes(new ValidationPipe())
   @HttpCode(200)
   @Post('login')
-  async login(@Body() dto:  AuthDto, @Res({ passthrough: true }) res: Response) {
-    const {refreshToken, ...response} = await this.authService.login(dto);
+  async login(@Body() dto: AuthDto, @Res({ passthrough: true }) res: Response) {
+    const { refreshToken, ...response } = await this.authService.login(dto);
     this.authService.addRefreshToken(res, refreshToken);
     return response;
   }
@@ -29,26 +29,34 @@ export class AuthController {
   @UsePipes(new ValidationPipe())
   @HttpCode(200)
   @Post('register')
-  async register(@Body() dto:  AuthDto, @Res({ passthrough: true }) res: Response) {
-    const {refreshToken, ...response} = await this.authService.register(dto);
+  async register(
+    @Body() dto: AuthDto,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const { refreshToken, ...response } = await this.authService.register(dto);
     this.authService.addRefreshToken(res, refreshToken);
     return response;
   }
 
   @HttpCode(200)
   @Post('login/access-token')
-  async getAccessToken(@Req() request: Request, @Res({ passthrough: true }) res: Response) {
-    const refreshTokenFromCookies = request.cookies[this.authService.REFRESH_TOKEN_COOKIE_NAME];
-    if(!refreshTokenFromCookies) {
+  async getAccessToken(
+    @Req() request: Request,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const refreshTokenFromCookies =
+      request.cookies[this.authService.REFRESH_TOKEN_COOKIE_NAME];
+    if (!refreshTokenFromCookies) {
       this.authService.removeRefreshToken(res);
       throw new UnauthorizedException('Refresh token not passed');
     }
-    const {refreshToken, ...response} = await this.authService.getAccessToken(refreshTokenFromCookies);
+    const { refreshToken, ...response } = await this.authService.getAccessToken(
+      refreshTokenFromCookies,
+    );
     this.authService.addRefreshToken(res, refreshToken);
 
     return response;
-  };
-
+  }
 
   @HttpCode(200)
   @Post('logout')

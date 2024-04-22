@@ -5,6 +5,7 @@ import { hash } from 'argon2';
 import { TaskService } from '../task/task.service';
 import { startOfDay, subDays } from 'date-fns';
 import { async } from 'rxjs';
+import { UserDto } from './dto/user.dto';
 
 @Injectable()
 export class UserService {
@@ -64,7 +65,7 @@ export class UserService {
     return this.prismaService.user.create({ data: user });
   }
 
-  async update(id: string, dto: AuthDto) {
+  async update(id: string, dto: UserDto) {
     let data = dto;
 
     if (dto.password) {
@@ -74,6 +75,7 @@ export class UserService {
     return this.prismaService.user.update({
       where: { id },
       data,
+      select: { id: true, name: true, email: true },
     });
   }
 }
