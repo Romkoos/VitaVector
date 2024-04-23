@@ -81,7 +81,7 @@ model PomodoroSession {
   user User @relation(fields: [userId], references: [id])
   userId String @map("user_id")
 
-  PomoRaunds PomodoroRaund[]
+  rounds PomodoroRaund[]
 
   @@map("pomodoro_session")
 }

@@ -4,7 +4,6 @@ import { AuthDto } from '../dto/auth.dto';
 import { hash } from 'argon2';
 import { TaskService } from '../task/task.service';
 import { startOfDay, subDays } from 'date-fns';
-import { async } from 'rxjs';
 import { UserDto } from './dto/user.dto';
 
 @Injectable()
@@ -13,6 +12,16 @@ export class UserService {
     private prismaService: PrismaService,
     private taskService: TaskService,
   ) {}
+
+  async getUserWithIntervalsById(id: string) {
+    return this.prismaService.user.findUnique({
+      where: { id },
+      select: {
+        intervalCount: true,
+      },
+    });
+  }
+
   async getById(id: string) {
     return this.prismaService.user.findUnique({
       where: { id },
