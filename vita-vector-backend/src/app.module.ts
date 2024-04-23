@@ -5,9 +5,15 @@ import { ConfigModule } from '@nestjs/config';
 import { TaskModule } from './task/task.module';
 
 @Module({
-  imports: [ConfigModule.forRoot({
-    envFilePath: process.env.NODE_ENV === 'production' ? '.env' : '.env.local',
-    isGlobal: true,
-  }), AuthModule, UserModule, TaskModule],
+  imports: [
+    ConfigModule.forRoot({
+      envFilePath:
+        process.env.NODE_ENV === 'production' ? '.env' : '.env.local',
+      isGlobal: true,
+    }),
+    AuthModule,
+    UserModule,
+    TaskModule,
+  ],
 })
 export class AppModule {}

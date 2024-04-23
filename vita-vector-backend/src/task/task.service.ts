@@ -6,33 +6,57 @@ import { PrismaService } from '../prisma.service';
 @Injectable()
 export class TaskService {
   constructor(private prismaService: PrismaService) {}
-  create(createTaskDto: CreateTaskDto) {
-    return 'This action adds a new task';
+
+  async create(dto: CreateTaskDto, userId: string) {
+    return this.prismaService.task.create({
+      data: {
+        ...dto,
+        user: {
+          connect: {
+            id: userId,
+          },
+        },
+      },
+    });
   }
 
-  findAll() {
-    return `This action returns all task`;
+  async update(dto: Partial<UpdateTaskDto>, taskId: string, userId: string) {
+    return this.prismaService.task.update({
+      where: {
+        id: taskId,
+        userId,
+      },
+      data: dto,
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} task`;
+  async delete(id: string) {
+    return this.prismaService.task.delete({
+      where: { id },
+    });
   }
 
-  update(id: number, updateTaskDto: UpdateTaskDto) {
-    return `This action updates a #${id} task`;
+  async findOne(id: string) {
+    return this.prismaService.task.findUnique({ where: { id } });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} task`;
+  async findAll() {
+    return this.prismaService.task.findMany();
   }
 
-  findAllCompletedByUserId(userId: string) {
+  async findAllByUserId(userId: string) {
+    return this.prismaService.task.findMany({
+      where: { userId },
+    });
+  }
+
+  async findAllCompletedByUserId(userId: string) {
     return this.prismaService.task.findMany({
       where: { userId, isCompleted: true },
     });
   }
 
-  findAllTodayByUserId(userId: string, todayStart: string) {
+  async findAllTodayByUserId(userId: string, todayStart: string) {
     return this.prismaService.task.findMany({
       where: {
         userId,
@@ -44,7 +68,7 @@ export class TaskService {
     });
   }
 
-  findAllWeekByUserId(userId: string, weekStart: string) {
+  async findAllWeekByUserId(userId: string, weekStart: string) {
     return this.prismaService.task.findMany({
       where: {
         userId,
