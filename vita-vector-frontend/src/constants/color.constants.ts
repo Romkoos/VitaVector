@@ -1,0 +1,7 @@
+export const COLORS = {
+	PRIMARY: '#7551FF',
+	SECONDARY: '#F97912',
+	BORDER: 'rgba(255, 255, 255, 0.12)',
+	SIDEBAR: '#141515',
+	BG: '#0E0F0F'
+}

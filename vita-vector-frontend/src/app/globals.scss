@@ -1,0 +1,60 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0;
+  }
+}
+
+body {
+  @apply text-base overflow-hidden;
+  font-family: var(--font-zen), sans-serif;
+  color: rgb(var(--foreground-rgb));
+  background: #0e0f0f;
+  @media (max-width: 1200px) {
+    font-size: 16px;
+  }
+  @media (max-width: 992px) {
+    font-size: 14px;
+  }
+}
+
+input.defaultCheckbox {
+  color: #fff;
+}
+
+.slide {
+  animation: slide_anim 0.5s;
+}
+@keyframes slide_anim {
+  0% {
+    transform: translateY(50px);
+    opacity: 0.4;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.animation-opacity {
+  animation: opacity_anim 0.5s;
+}
+@keyframes opacity_anim {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
