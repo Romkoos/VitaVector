@@ -7,6 +7,6 @@ export interface ITimeBlockResponse extends IBase {
 	order: number
 }
 
-export type ITimeBlockFormState = Partial<
+export type TypeTimeBlockFormState = Partial<
 	Omit<ITimeBlockResponse, 'createdAt' | 'updatedAt'>
 >

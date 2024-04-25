@@ -1,5 +1,5 @@
 import { IAuthForm, IAuthResponse } from '@/types/auth.types'
-import { axiosDefault } from '../api/interceptors'
+import { axiosDefault } from '@/api/interceptors'
 import { removeAccessToken, saveAccessToken } from './auth-token.service'
 
 export enum EnumTokens {
@@ -7,7 +7,7 @@ export enum EnumTokens {
 	REFRESH_TOKEN = 'refreshToken'
 }
 
-export const authService = {
+class AuthService {
 	async main(type: 'login' | 'register', data: IAuthForm) {
 		const response = await axiosDefault.post<IAuthResponse>(
 			`/auth/${type}`,
@@ -17,7 +17,7 @@ export const authService = {
 		if (response.data.accessToken) saveAccessToken(response.data.accessToken)
 
 		return response
-	},
+	}
 
 	async getNewToken() {
 		const response = await axiosDefault.post<IAuthResponse>(
@@ -27,7 +27,7 @@ export const authService = {
 		if (response.data.accessToken) saveAccessToken(response.data.accessToken)
 
 		return response
-	},
+	}
 
 	async logout() {
 		const response = await axiosDefault.post<boolean>('/auth/logout')
@@ -37,3 +37,5 @@ export const authService = {
 		return response
 	}
 }
+
+export const authService = new AuthService()

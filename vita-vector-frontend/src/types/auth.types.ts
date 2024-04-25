@@ -17,3 +17,5 @@ export interface IAuthResponse {
 	user: IUser
 	accessToken: string
 }
+
+export type TypeUserForm = Partial<Omit<IUser, 'id'> & { password?: string }>

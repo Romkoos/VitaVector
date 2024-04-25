@@ -10,9 +10,9 @@ export interface IPomodoroRoundResponse extends IBase {
 	totalSeconds: number
 }
 
-export type IPomodoroSessionState = Partial<
+export type TypePomodoroSessionState = Partial<
 	Omit<IPomodoroSessionResponse, 'id' | 'createdAt' | 'updatedAt'>
 >
-export type IPomodoroRoundState = Partial<
+export type TypePomodoroRoundState = Partial<
 	Omit<IPomodoroRoundResponse, 'id' | 'createdAt' | 'updatedAt'>
 >
