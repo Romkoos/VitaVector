@@ -1,6 +1,6 @@
 import type { Config } from 'tailwindcss'
-// tslint:disable-next-line:rule-name
-import { COLORS } from '@/constants/color.constants'
+
+import { COLORS } from './src/constants/color.constants'
 
 const config: Config = {
 	darkMode: 'class',

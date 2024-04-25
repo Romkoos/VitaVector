@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from '../user/user.service';
 import { AuthDto } from '../dto/auth.dto';
@@ -6,11 +10,9 @@ import { verify } from 'argon2';
 import { Response } from 'express';
 import { ConfigService } from '@nestjs/config';
 
-
-
 @Injectable()
 export class AuthService {
-  REFRESH_TOKEN_COOKIE_NAME = 'refresh_token';
+  REFRESH_TOKEN_COOKIE_NAME = 'refreshToken';
   EXPIRES_IN_DAYS_REFRESH_TOKEN = 1;
 
   constructor(
@@ -19,10 +21,8 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-
-
   async login(dto: AuthDto) {
-    const {password, ...user} = await this.validateUser(dto);
+    const { password, ...user } = await this.validateUser(dto);
     const tokens = this.issueTokens(user.id);
 
     return {
@@ -36,8 +36,7 @@ export class AuthService {
     if (existingUser) {
       throw new UnauthorizedException('Email already in use');
     }
-
-    const {password, ...user} = await this.userService.create(dto);
+    const { password, ...user } = await this.userService.create(dto);
 
     const tokens = this.issueTokens(user.id);
 
@@ -48,9 +47,9 @@ export class AuthService {
   }
 
   private issueTokens(userId: string) {
-    const data = {id: userId};
-    const accessToken = this.jwtService.sign(data, {expiresIn: '1h'});
-    const refreshToken = this.jwtService.sign(data, {expiresIn: '7d'});
+    const data = { id: userId };
+    const accessToken = this.jwtService.sign(data, { expiresIn: '1h' });
+    const refreshToken = this.jwtService.sign(data, { expiresIn: '7d' });
 
     return {
       accessToken,
@@ -82,7 +81,6 @@ export class AuthService {
       ...tokens,
       user,
     };
-
   }
 
   addRefreshToken(res: Response, refreshToken: string) {
@@ -93,8 +91,8 @@ export class AuthService {
       domain: this.configService.get('COOKIES_ATTR_DOMAIN'),
       expires,
       secure: true,
-      sameSite: this.configService.get('COOKIES_ATTR_SAME_SITE')
-    })
+      sameSite: this.configService.get('COOKIES_ATTR_SAME_SITE'),
+    });
   }
 
   removeRefreshToken(res: Response) {
@@ -103,7 +101,7 @@ export class AuthService {
       domain: this.configService.get('COOKIES_ATTR_DOMAIN'),
       expires: new Date(0),
       secure: true,
-      sameSite: this.configService.get('COOKIES_ATTR_SAME_SITE')
-    })
+      sameSite: this.configService.get('COOKIES_ATTR_SAME_SITE'),
+    });
   }
 }

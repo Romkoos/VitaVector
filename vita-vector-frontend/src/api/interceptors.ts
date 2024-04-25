@@ -10,7 +10,6 @@ const options: CreateAxiosDefaults = {
 	baseURL: 'http://localhost:4200/api', //TODO: Change this to the actual API URL from .env
 	headers: {
 		'Content-Type': 'application/json'
-		// 'Access-Control-Allow-Origin': '*'
 	},
 	withCredentials: true
 }
