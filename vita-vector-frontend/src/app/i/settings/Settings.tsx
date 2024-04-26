@@ -30,10 +30,7 @@ export function Settings() {
 
 	return (
 		<div>
-			<form
-				className='w-2/4'
-				onSubmit={handleSubmit(onSubmit)}
-			>
+			<form className='w-2/4' onSubmit={handleSubmit(onSubmit)}>
 				<div className='grid grid-cols-2 gap-10'>
 					<div>
 						<Field
@@ -89,11 +86,11 @@ export function Settings() {
 						/>
 
 						<Field
-							id='intervalsCount'
+							id='intervalCount'
 							label='Intervals count (max 10): '
 							placeholder='Enter intervals count (max 10): '
 							isNumber
-							{...register('intervalsCount', {
+							{...register('intervalCount', {
 								valueAsNumber: true
 							})}
 							extra='mb-6'
@@ -101,10 +98,7 @@ export function Settings() {
 					</div>
 				</div>
 
-				<Button
-					type='submit'
-					disabled={isPending}
-				>
+				<Button type='submit' disabled={isPending}>
 					Save
 				</Button>
 			</form>

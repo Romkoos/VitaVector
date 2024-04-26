@@ -10,7 +10,7 @@ export interface IUser {
 
 	workInterval?: number
 	breakInterval?: number
-	intervalsCount?: number
+	intervalCount?: number
 }
 
 export interface IAuthResponse {
