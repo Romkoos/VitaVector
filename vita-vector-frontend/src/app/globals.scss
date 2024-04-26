@@ -84,3 +84,9 @@ input:checked.defaultCheckbox::before {
     opacity: 1;
   }
 }
+
+input:-internal-autofill-previewed {
+  background-color: black !important;
+  color: red !important;
+  appearance: unset;
+}

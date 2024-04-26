@@ -6,6 +6,7 @@ import { SITE_NAME } from '@/constants/seo.constants'
 
 import './globals.scss'
 import { Providers } from './providers'
+import { ReactNode } from 'react'
 
 const zen = Noto_Sans({
 	subsets: ['cyrillic', 'latin'],
@@ -26,7 +27,7 @@ export const metadata: Metadata = {
 export default function RootLayout({
 	children
 }: Readonly<{
-	children: React.ReactNode
+	children: ReactNode
 }>) {
 	return (
 		<html lang='en'>

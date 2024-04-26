@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { EnumTokens } from '../services/auth.service'
+import { EnumTokens } from '@/services/auth.service'
 import { DASHBOARD_PAGES } from '@/config/pages-url.config'
 
 export async function middleware(req: NextRequest) {

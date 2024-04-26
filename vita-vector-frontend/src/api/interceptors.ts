@@ -2,9 +2,9 @@ import axios, { CreateAxiosDefaults } from 'axios'
 import {
 	getAccessToken,
 	removeAccessToken
-} from '../../services/auth-token.service'
+} from '@/services/auth-token.service'
 import { errorCatch } from './error-handeling'
-import { authService } from '../../services/auth.service'
+import { authService } from '@/services/auth.service'
 
 const options: CreateAxiosDefaults = {
 	baseURL: 'http://localhost:4200/api', //TODO: Change this to the actual API URL from .env
