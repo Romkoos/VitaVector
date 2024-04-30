@@ -36,6 +36,8 @@ model User {
   tasks            Task[]
   timeBlocks       TimeBlock[]
   pomodoroSessions PomodoroSession[]
+  columns          Column[]
+  columnOrder      ColumnOrder[]
 
   @@map("user")
 }
@@ -45,14 +47,40 @@ model Task {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  name        String
+  title       String
   priority    Priority?
   isCompleted Boolean?  @default(false) @map("is_completed")
+  columnId    String?   @map("column_id")
 
   user   User   @relation(fields: [userId], references: [id])
   userId String @map("user_id")
 
   @@map("task")
+}
+
+model Column {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  title  String
+  tasks  String[]
+  user   User     @relation(fields: [userId], references: [id])
+  userId String   @map("user_id")
+
+  @@map("column")
+}
+
+model ColumnOrder {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  columns String[]
+  user    User     @relation(fields: [userId], references: [id])
+  userId  String   @unique @map("user_id")
+
+  @@map("column_order")
 }
 
 model TimeBlock {

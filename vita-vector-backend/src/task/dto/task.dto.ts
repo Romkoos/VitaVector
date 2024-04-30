@@ -19,4 +19,8 @@ export class TaskDto {
   @IsOptional()
   @Transform(({ value }) => ('' + value).toLowerCase().replace(' ', '_'))
   priority?: Priority;
+
+  @IsString()
+  @IsOptional()
+  columnId?: string;
 }

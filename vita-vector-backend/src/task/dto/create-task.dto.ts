@@ -4,7 +4,7 @@ import { Transform } from 'class-transformer';
 
 export class CreateTaskDto {
   @IsString()
-  name: string;
+  title: string;
 
   @IsBoolean()
   @IsOptional()
@@ -18,4 +18,8 @@ export class CreateTaskDto {
   @IsOptional()
   @Transform(({ value }) => ('' + value).toLowerCase().replace(' ', '_'))
   priority?: Priority;
+
+  @IsString()
+  @IsOptional()
+  columnId?: string;
 }

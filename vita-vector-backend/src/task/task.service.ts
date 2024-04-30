@@ -2,11 +2,15 @@ import { Injectable } from '@nestjs/common';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { PrismaService } from '../prisma.service';
+import { CreateColumnDto } from './dto/create-column.dto';
+import { ColumnDto } from './dto/column.dto';
+import { ColumnsOrderDto } from './dto/columns-order.dto';
 
 @Injectable()
 export class TaskService {
   constructor(private prismaService: PrismaService) {}
 
+  // --------------- TASKS
   async create(dto: CreateTaskDto, userId: string) {
     return this.prismaService.task.create({
       data: {
@@ -38,10 +42,6 @@ export class TaskService {
 
   async findOne(id: string) {
     return this.prismaService.task.findUnique({ where: { id } });
-  }
-
-  async findAll() {
-    return this.prismaService.task.findMany();
   }
 
   async findAllByUserId(userId: string) {
@@ -78,5 +78,90 @@ export class TaskService {
         },
       },
     });
+  }
+
+  // --------------- COLUMNS
+
+  async createColumnsOrder(dto: ColumnsOrderDto, userId: string) {
+    return this.prismaService.columnOrder.create({
+      data: {
+        ...dto,
+        user: {
+          connect: {
+            id: userId,
+          },
+        },
+      },
+    });
+  }
+
+  async getColumnsOrder(userId: string) {
+    return this.prismaService.columnOrder.findFirst({
+      where: { userId },
+    });
+  }
+
+  async updateColumnsOrder(dto: ColumnsOrderDto, userId: string) {
+    return this.prismaService.columnOrder.update({
+      where: {
+        userId: userId,
+      },
+      data: dto,
+    });
+  }
+
+  async createColumn(dto: CreateColumnDto, userId: string) {
+    return this.prismaService.column.create({
+      data: {
+        ...dto,
+        user: {
+          connect: {
+            id: userId,
+          },
+        },
+      },
+    });
+  }
+
+  async deleteColumn(id: string) {
+    return this.prismaService.column.delete({
+      where: { id },
+    });
+  }
+
+  async updateColumn(dto: ColumnDto, columnId: string, userId: string) {
+    return this.prismaService.column.update({
+      where: {
+        id: columnId,
+        userId,
+      },
+      data: dto,
+    });
+  }
+
+  async getColumnsAndOrder(userId: string) {
+    console.log('getColumnsAndOrder');
+    const columns = await this.prismaService.column.findMany({
+      where: { userId },
+    });
+
+    const columnOrder = await this.prismaService.columnOrder.findFirst({
+      where: { userId: userId },
+    });
+
+    // Маппинг колонок в формат, который вам нужен
+    const columnsMap = columns.reduce((acc, column) => {
+      acc[column.id] = {
+        id: column.id,
+        title: column.title,
+        tasks: column.tasks,
+      };
+      return acc;
+    }, {});
+
+    return {
+      columns: columnsMap,
+      columnOrder: columnOrder ? columnOrder.columns : [],
+    };
   }
 }
