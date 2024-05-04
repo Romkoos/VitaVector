@@ -76,7 +76,7 @@ model ColumnOrder {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  columns String[]
+  columns String[] @default([])
   user    User     @relation(fields: [userId], references: [id])
   userId  String   @unique @map("user_id")
 

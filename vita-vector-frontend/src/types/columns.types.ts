@@ -7,6 +7,11 @@ export interface IColumnResponse extends IBase {
 export interface IColumnOrderResponse extends IBase {
 	columns: string[]
 }
+export interface INewColumnOrderResponse {
+	columns: string[]
+}
+
+export type TypeColumnOrderResponse = string[]
 
 interface IColumnDetails {
 	id: string
@@ -27,5 +32,5 @@ export type TypeColumnFormState = Partial<
 	Omit<IColumnResponse, 'id' | 'updatedAt'>
 >
 export type TypeColumnOrderFormState = Partial<
-	Omit<IColumnResponse, 'id' | 'updatedAt'>
+	Omit<IColumnOrderResponse, 'id' | 'updatedAt'>
 >

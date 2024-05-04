@@ -140,7 +140,6 @@ export class TaskService {
   }
 
   async getColumnsAndOrder(userId: string) {
-    console.log('getColumnsAndOrder');
     const columns = await this.prismaService.column.findMany({
       where: { userId },
     });

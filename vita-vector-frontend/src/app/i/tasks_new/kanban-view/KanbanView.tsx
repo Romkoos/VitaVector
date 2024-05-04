@@ -4,10 +4,15 @@ import styles from './KanbanView.module.scss'
 import { DragDropContext, Droppable } from '@hello-pangea/dnd'
 import { useBoard } from '@/app/i/tasks_new/hooks/useBoard'
 import Loader from '@/components/ui/Loader'
+import { SubmitHandler, useForm } from 'react-hook-form'
+import { Field } from '@/components/ui/fields/Field'
+import { Button } from '@/components/ui/buttons/Button'
+import { useCreateColumn } from '@/app/i/tasks_new/kanban-view/hooks/useCreateColumn'
+import { IColumnResponse } from '@/types/columns.types'
 
 export function KanbanView() {
 	const { boardData, setBoardData } = useBoard()
-	console.log(boardData)
+	const { isPending, mutate } = useCreateColumn()
 
 	const onDragEnd = (result: any) => {
 		const { destination, source, draggableId, type } = result
@@ -86,42 +91,73 @@ export function KanbanView() {
 		setBoardData(newState)
 		return
 	}
-	if (!boardData) return <Loader />
-	return (
-		<DragDropContext onDragEnd={onDragEnd}>
-			<Droppable
-				droppableId={'all-columns'}
-				direction={'horizontal'}
-				type={'column'}
-			>
-				{(provided, snapshot) => {
-					return (
-						<div
-							ref={provided.innerRef}
-							{...provided.droppableProps}
-							className={styles.board}
-						>
-							{boardData.columnOrder.map((columnId: string, index: number) => {
-								const column = boardData.columns[columnId]
-								const tasks = column.tasks.map((taskId: string) => {
-									console.log('taskId', taskId)
-									return boardData.tasks[taskId]
-								})
 
-								return (
-									<KanbanColumn
-										index={index}
-										key={column.id}
-										column={column}
-										tasks={tasks}
-									/>
-								)
-							})}
-							{provided.placeholder}
-						</div>
-					)
-				}}
-			</Droppable>
-		</DragDropContext>
+	const { register, handleSubmit } = useForm<IColumnResponse>({
+		mode: 'onChange'
+	})
+	const addColumnHandler: SubmitHandler<IColumnResponse> = data => {
+		const { ...rest } = data
+		mutate({
+			...rest
+		})
+	}
+
+	if (!boardData) return <Loader />
+
+	return (
+		<>
+			<form className={'flex'} onSubmit={handleSubmit(addColumnHandler)}>
+				<Field
+					id='column-name'
+					placeholder='New column name'
+					type='text'
+					{...register('title', {
+						required: 'Column name is required'
+					})}
+					extra='mr-3 max-w-md mt-0'
+				/>
+				<Button type='submit' disabled={isPending}>
+					Add
+				</Button>
+			</form>
+
+			<DragDropContext onDragEnd={onDragEnd}>
+				<Droppable
+					droppableId={'all-columns'}
+					direction={'horizontal'}
+					type={'column'}
+				>
+					{provided => {
+						return (
+							<div
+								ref={provided.innerRef}
+								{...provided.droppableProps}
+								className={styles.board}
+							>
+								{boardData.columnOrder.map(
+									(columnId: string, index: number) => {
+										const column = boardData.columns[columnId]
+										const tasks = column.tasks.map((taskId: string) => {
+											console.log('taskId', taskId)
+											return boardData.tasks[taskId]
+										})
+
+										return (
+											<KanbanColumn
+												index={index}
+												key={column.id}
+												column={column}
+												tasks={tasks}
+											/>
+										)
+									}
+								)}
+								{provided.placeholder}
+							</div>
+						)
+					}}
+				</Droppable>
+			</DragDropContext>
+		</>
 	)
 }

@@ -1,9 +1,9 @@
 import { axiosWithAuth } from '@/api/interceptors'
-import { ITaskResponse } from '@/types/task.types'
 import {
 	IColumnOrderResponse,
 	IColumnResponse,
 	IColumnsAndOrder,
+	INewColumnOrderResponse,
 	TypeColumnFormState,
 	TypeColumnOrderFormState
 } from '@/types/columns.types'
@@ -12,21 +12,23 @@ class ColumnsService {
 	private readonly BASE_URL = '/user/tasks/columns'
 	private readonly ORDER = '/order'
 
-	async createColumnsOrder(order: TypeColumnOrderFormState) {
-		return await axiosWithAuth.post<IColumnOrderResponse>(
-			`${this.BASE_URL}${this.ORDER}`
+	async createColumnsOrder(order: INewColumnOrderResponse) {
+		return await axiosWithAuth.post<INewColumnOrderResponse>(
+			`${this.BASE_URL}${this.ORDER}`,
+			order
 		)
 	}
 
 	async getColumnsOrder() {
-		return await axiosWithAuth.get<ITaskResponse>(
+		return await axiosWithAuth.get<IColumnOrderResponse>(
 			`${this.BASE_URL}${this.ORDER}`
 		)
 	}
 
-	async updateColumnsOrder(order: TypeColumnOrderFormState) {
-		return await axiosWithAuth.put<IColumnOrderResponse>(
-			`${this.BASE_URL}${this.ORDER}`
+	async updateColumnsOrder(order: IColumnOrderResponse) {
+		return await axiosWithAuth.put<TypeColumnOrderFormState>(
+			`${this.BASE_URL}${this.ORDER}`,
+			order
 		)
 	}
 
