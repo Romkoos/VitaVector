@@ -6,8 +6,9 @@ export class CreateColumnDto {
   title: string;
 
   @IsArray()
+  @IsString({ each: true })
   @IsOptional()
-  tasks?: string[];
+  taskIds?: string[];
 
   @IsString()
   @IsOptional()

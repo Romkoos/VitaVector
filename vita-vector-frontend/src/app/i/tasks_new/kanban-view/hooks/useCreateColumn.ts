@@ -10,13 +10,14 @@ import {
 export function useCreateColumn() {
 	const queryClient = useQueryClient()
 
-	const { mutate, isPending } = useMutation({
+	const { mutate: mutateColumn, isPending: isPendingColumn } = useMutation({
 		mutationKey: ['create column'],
 		mutationFn: (data: IColumnResponse) => columnsService.createColumn(data),
 		onSuccess: async response => {
-			const newColumnId = response.data.id
+			const newColumnId = response.data
 
 			const columnsOrderResponse = await columnsService.getColumnsOrder()
+
 			const columnsOrder = columnsOrderResponse.data
 
 			if (!columnsOrder || columnsOrder.columns.length === 0) {
@@ -45,5 +46,5 @@ export function useCreateColumn() {
 		}
 	})
 
-	return { mutate, isPending }
+	return { mutateColumn, isPendingColumn }
 }

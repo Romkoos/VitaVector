@@ -9,10 +9,12 @@ import { Field } from '@/components/ui/fields/Field'
 import { Button } from '@/components/ui/buttons/Button'
 import { useCreateColumn } from '@/app/i/tasks_new/kanban-view/hooks/useCreateColumn'
 import { IColumnResponse } from '@/types/columns.types'
+import { useUpdateColumnsOrder } from '@/app/i/tasks_new/kanban-view/hooks/useUpdateColumnsOrder'
 
 export function KanbanView() {
 	const { boardData, setBoardData } = useBoard()
-	const { isPending, mutate } = useCreateColumn()
+	const { isPendingColumn, mutateColumn } = useCreateColumn()
+	const { isPendingColumnOrder, mutateColumnOrder } = useUpdateColumnsOrder()
 
 	const onDragEnd = (result: any) => {
 		const { destination, source, draggableId, type } = result
@@ -35,7 +37,7 @@ export function KanbanView() {
 				...boardData,
 				columnOrder: newColumnOrder
 			}
-
+			mutateColumnOrder(newState.columnOrder)
 			setBoardData(newState)
 			return
 		}
@@ -97,7 +99,7 @@ export function KanbanView() {
 	})
 	const addColumnHandler: SubmitHandler<IColumnResponse> = data => {
 		const { ...rest } = data
-		mutate({
+		mutateColumn({
 			...rest
 		})
 	}
@@ -116,7 +118,7 @@ export function KanbanView() {
 					})}
 					extra='mr-3 max-w-md mt-0'
 				/>
-				<Button type='submit' disabled={isPending}>
+				<Button type='submit' disabled={isPendingColumn}>
 					Add
 				</Button>
 			</form>
@@ -137,10 +139,11 @@ export function KanbanView() {
 								{boardData.columnOrder.map(
 									(columnId: string, index: number) => {
 										const column = boardData.columns[columnId]
-										const tasks = column.tasks.map((taskId: string) => {
-											console.log('taskId', taskId)
-											return boardData.tasks[taskId]
-										})
+										const tasks =
+											column.tasks?.map((taskId: string) => {
+												console.log('taskId', taskId)
+												return boardData.tasks[taskId]
+											}) || []
 
 										return (
 											<KanbanColumn

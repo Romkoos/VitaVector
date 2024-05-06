@@ -50,7 +50,9 @@ model Task {
   title       String
   priority    Priority?
   isCompleted Boolean?  @default(false) @map("is_completed")
-  columnId    String?   @map("column_id")
+
+  column   Column? @relation(fields: [columnId], references: [id])
+  columnId String  @map("column_id")
 
   user   User   @relation(fields: [userId], references: [id])
   userId String @map("user_id")
@@ -63,10 +65,14 @@ model Column {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  title  String
-  tasks  String[]
-  user   User     @relation(fields: [userId], references: [id])
-  userId String   @map("user_id")
+  title String
+  tasks Task[]
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String @map("user_id")
+
+  columnOrder   ColumnOrder? @relation(fields: [columnOrderId], references: [id])
+  columnOrderId String?      @map("column_order_id")
 
   @@map("column")
 }
@@ -76,9 +82,10 @@ model ColumnOrder {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  columns String[] @default([])
-  user    User     @relation(fields: [userId], references: [id])
-  userId  String   @unique @map("user_id")
+  columns Column[]
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String @unique @map("user_id")
 
   @@map("column_order")
 }

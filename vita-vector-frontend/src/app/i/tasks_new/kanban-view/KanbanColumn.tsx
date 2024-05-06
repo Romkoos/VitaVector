@@ -15,7 +15,6 @@ interface IKanbanColumn {
 }
 
 export function KanbanColumn(props: any) {
-	console.log('KanbanColumn', props)
 	return (
 		<Draggable draggableId={props.column.id} index={props.index}>
 			{(provided, snapshot) => {

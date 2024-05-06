@@ -25,7 +25,7 @@ class ColumnsService {
 		)
 	}
 
-	async updateColumnsOrder(order: IColumnOrderResponse) {
+	async updateColumnsOrder(order: INewColumnOrderResponse) {
 		return await axiosWithAuth.put<TypeColumnOrderFormState>(
 			`${this.BASE_URL}${this.ORDER}`,
 			order

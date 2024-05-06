@@ -5,18 +5,19 @@ export interface IColumnResponse extends IBase {
 }
 
 export interface IColumnOrderResponse extends IBase {
-	columns: string[]
+	columns: IColumnDetails[]
 }
+
 export interface INewColumnOrderResponse {
-	columns: string[]
+	columns: IColumnDetails[]
 }
 
 export type TypeColumnOrderResponse = string[]
 
-interface IColumnDetails {
-	id: string
-	title: string
-	tasks: string[]
+export interface IColumnDetails {
+	id?: string
+	title?: string
+	tasks?: string[]
 }
 
 interface IColumnsMap {

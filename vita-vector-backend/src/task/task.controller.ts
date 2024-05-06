@@ -15,9 +15,9 @@ import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { Auth } from '../decorators/auth.decorators';
 import { CurrentUser } from '../decorators/user.decorator';
-import { CreateColumnDto } from './dto/create-column.dto';
 import { ColumnDto } from './dto/column.dto';
 import { ColumnsOrderDto } from './dto/columns-order.dto';
+import { CreateColumnDto } from './dto/create-column.dto';
 
 @Controller('user/tasks')
 export class TaskController {
@@ -74,7 +74,6 @@ export class TaskController {
   @Get('/columns')
   @Auth()
   findColumnsAndOrder(@CurrentUser('id') userId: string) {
-    console.log('findColumnsAndOrder controller');
     return this.taskService.getColumnsAndOrder(userId);
   }
 

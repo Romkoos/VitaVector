@@ -1,13 +1,18 @@
-import { IsArray, IsOptional, IsString } from 'class-validator';
+import { ArrayNotEmpty, IsArray, IsOptional, IsString } from 'class-validator';
 
 export class ColumnDto {
+  @IsString()
+  @IsOptional()
+  id?: string;
+
   @IsString()
   @IsOptional()
   title?: string;
 
   @IsArray()
-  @IsOptional()
-  tasks?: string[];
+  @ArrayNotEmpty()
+  @IsString({ each: true })
+  taskIds?: string[];
 
   @IsString()
   @IsOptional()

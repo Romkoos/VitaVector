@@ -2,9 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { PrismaService } from '../prisma.service';
-import { CreateColumnDto } from './dto/create-column.dto';
 import { ColumnDto } from './dto/column.dto';
 import { ColumnsOrderDto } from './dto/columns-order.dto';
+import { CreateColumnDto } from './dto/create-column.dto';
 
 @Injectable()
 export class TaskService {
@@ -85,7 +85,9 @@ export class TaskService {
   async createColumnsOrder(dto: ColumnsOrderDto, userId: string) {
     return this.prismaService.columnOrder.create({
       data: {
-        ...dto,
+        columns: {
+          connect: dto.columns.map((column) => ({ id: column.id })),
+        },
         user: {
           connect: {
             id: userId,
@@ -96,24 +98,22 @@ export class TaskService {
   }
 
   async getColumnsOrder(userId: string) {
-    return this.prismaService.columnOrder.findFirst({
+    return this.prismaService.columnOrder.findUnique({
       where: { userId },
+      include: { columns: true },
     });
   }
 
   async updateColumnsOrder(dto: ColumnsOrderDto, userId: string) {
+    console.log(dto);
     return this.prismaService.columnOrder.update({
       where: {
         userId: userId,
       },
-      data: dto,
-    });
-  }
-
-  async createColumn(dto: CreateColumnDto, userId: string) {
-    return this.prismaService.column.create({
       data: {
-        ...dto,
+        columns: {
+          connect: dto.columns.map((column) => ({ id: column.id })),
+        },
         user: {
           connect: {
             id: userId,
@@ -121,6 +121,34 @@ export class TaskService {
         },
       },
     });
+  }
+
+  async createColumn(dto: CreateColumnDto, userId: string) {
+    const newColumn = await this.prismaService.column.create({
+      data: {
+        title: dto.title,
+        // При создании колонки связанных тасков может не быть
+        user: {
+          connect: {
+            id: userId,
+          },
+        },
+      },
+    });
+
+    // При наличии тасков в DTO, связываем их сразу после создания колонки
+    if (dto.taskIds && dto.taskIds.length > 0) {
+      await this.prismaService.column.update({
+        where: { id: newColumn.id },
+        data: {
+          tasks: {
+            connect: dto.taskIds.map((id) => ({ id })),
+          },
+        },
+      });
+    }
+
+    return newColumn;
   }
 
   async deleteColumn(id: string) {
@@ -142,25 +170,32 @@ export class TaskService {
   async getColumnsAndOrder(userId: string) {
     const columns = await this.prismaService.column.findMany({
       where: { userId },
+      include: {
+        tasks: true, // Убедитесь, что задачи включены в запрос
+      },
     });
 
     const columnOrder = await this.prismaService.columnOrder.findFirst({
       where: { userId: userId },
+      include: {
+        columns: true, // Убедитесь, что колонки включены в запрос
+      },
     });
 
-    // Маппинг колонок в формат, который вам нужен
     const columnsMap = columns.reduce((acc, column) => {
       acc[column.id] = {
         id: column.id,
         title: column.title,
-        tasks: column.tasks,
+        taskIds: column.tasks.map((task) => task.id),
       };
       return acc;
     }, {});
 
     return {
       columns: columnsMap,
-      columnOrder: columnOrder ? columnOrder.columns : [],
+      columnOrder: columnOrder
+        ? columnOrder.columns.map((column) => column.id)
+        : [],
     };
   }
 }
